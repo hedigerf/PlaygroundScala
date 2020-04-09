@@ -2,24 +2,28 @@ import scala.annotation.tailrec
 
 object Balance {
 
-  def balance(chars: List[Char]): Boolean = {
+  def balanceRaphi(chars: List[Char]): Boolean = {
 
     @tailrec
-    def loop(acc: Int, check: Boolean, chars: List[Char]): Boolean = {
-      println(s" acc: $acc check: $check  chars: $chars")
-      if ((acc == -1) || !chars.isEmpty) check
-      else {
+    def loop(acc: Int, check: Boolean, chars: List[Char]): Boolean =
+      if ((acc == -1) || !chars.isEmpty) {
+        Console.println(s"Finished result: $check ")
+        check
+      } else {
         val currentChar   = chars.head
-        val isHeadClosing = isClosing(chars.head)
+        val isHeadClosing = isClosing(currentChar)
         val newAcc        = accAdj(isHeadClosing, acc)
-        println(s" current char is: $currentChar $newAcc:")
+        val isParentRes   = isParent(newAcc)
+        val remaining     = chars.tail
+        Console.println(
+          s"Current char is: $currentChar isClosing: $isHeadClosing newAcc: $newAcc isParent: $isParentRes remaining: $remaining"
+        )
         loop(
           newAcc,
-          isParent(newAcc),
-          chars.tail
+          isParentRes,
+          remaining
         )
       }
-    }
 
     def isClosing(zeichen: Char): Boolean =
       zeichen == ')'
@@ -38,19 +42,18 @@ object Balance {
     loop(0, true, chars)
   }
 
-  def balance2(chars: List[Char]): Boolean = {
-    def inner(c: List[Char], count: Int): Boolean = c match {
+  def balance(chars: List[Char]): Boolean = {
+    def balanceInternal(c: List[Char], count: Int): Boolean = c match {
       case Nil                   => count == 0
       case ')' :: _ if count < 1 => false
-      case ')' :: xs             => inner(xs, count - 1)
-      case '(' :: xs             => inner(xs, count + 1)
-      case _ :: xs               => inner(xs, count)
+      case ')' :: xs             => balanceInternal(xs, count - 1)
+      case '(' :: xs             => balanceInternal(xs, count + 1)
+      case _ :: xs               => balanceInternal(xs, count)
     }
-
-    inner(chars, 0)
+    balanceInternal(chars, 0)
   }
 
-  def balance3(chars: List[Char]): Boolean =
+  def balanceWithReduce(chars: List[Char]): Boolean =
     chars.foldLeft(0)((count: Int, char: Char) =>
       char match {
         case ')' if count < 1 => count + 1
