@@ -3,10 +3,11 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
-.idea
+.idea/
 
 # IntelliJ
-out/
+target/
+project/target
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
