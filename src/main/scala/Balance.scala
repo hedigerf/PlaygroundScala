@@ -6,9 +6,9 @@ object Balance {
 
     @tailrec
     def loop(acc: Int, check: Boolean, chars: List[Char]): Boolean =
-      if ((acc == -1) || !chars.isEmpty) {
+      if (chars.isEmpty) {
         Console.println(s"Finished result: $check ")
-        check
+        acc == -1
       } else {
         val currentChar   = chars.head
         val isHeadClosing = isClosing(currentChar)
